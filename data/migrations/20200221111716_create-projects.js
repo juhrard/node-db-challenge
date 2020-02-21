@@ -3,10 +3,12 @@ exports.up = function(knex) {
   return knex.schema
     .createTable('projects', tbl => {
       tbl.increments();
-      tbl.text('project_name', 128)
+      tbl.string('project_name', 128)
         .unique()
         .notNullable();
-      tbl.text('project_description', 128)
+      tbl.string('project_description', 128)
+        .notNullable();
+      tbl.boolean('completed')
         .notNullable();
     })
     .createTable('tasks', tbl => {
@@ -14,12 +16,12 @@ exports.up = function(knex) {
       tbl.integer('task_number')
         .unsigned()
         .notNullable();
-      tbl.varchar('task_name')
+      tbl.string('task_name')
         .unique()
         .notNullable();
-      tbl.varchar('instructions', 256)
+      tbl.string('instructions', 256)
         .notNullable();
-      tbl.varchar('notes', 256)
+      tbl.string('notes', 256)
         .defaultTo(knex.raw('none'));
       tbl.boolean('completed')
         .notNullable();
@@ -36,9 +38,9 @@ exports.up = function(knex) {
       tbl.integer('resource_id')
         .unsigned()
         .notNullable();
-      tbl.varchar('resource_name', 128)
+      tbl.string('resource_name', 128)
         .notNullable();
-      tbl.varchar('resource_description', 256)
+      tbl.string('resource_description', 256)
         .defaultTo(knex.raw('none'));
       tbl.integer('project_id')
         .unsigned()
