@@ -7,7 +7,16 @@ const router = express.Router();
 router.get('/', (req, res) => {
   projects.find()
   .then(projects => {
-    res.json(projects);
+    console.log(projects);
+    const newProjects = projects.map(project => {
+      if(project.completed === 0) {
+        project.completed = false;
+      } else {
+        project.completed = true;
+      }
+      return project;
+    });
+    res.json(newProjects);
   })
   .catch(err => {
     res.status(500).json({ message: 'Failed to get projects' });
@@ -17,7 +26,15 @@ router.get('/', (req, res) => {
 router.get('/tasks', (req, res) => {
   projects.findTasks()
   .then(tasks => {
-    res.json(tasks);
+    const newTasks = tasks.map(task => {
+      if(task.completed === 0) {
+        task.completed = false;
+      } else {
+        task.completed = true;
+      }
+      return task;
+    });
+    res.json(newTasks);
   })
   .catch(err => {
     res.status(500).json({ message: 'Failed to get projects' });
@@ -40,7 +57,14 @@ router.get('/:id', validateProjectId, (req, res) => {
   projects.findById(id)
   .then(project => {
     if (project) {
-      res.json(project);
+      if(project.completed === 0) {
+        project.completed = false;
+        res.json(project);
+      } else {
+        project.completed = true;
+        res.json(project);
+      }
+      return project;
     } else {
       res.status(404).json({ message: 'Could not find project with given id.' })
     }
@@ -56,6 +80,15 @@ router.get('/:id/tasks', validateProjectId, (req, res) => {
   projects.findProjectTasks(id)
   .then(tasks => {
     if (tasks.length) {
+      const newTasks = projects.map(task => {
+        if(task.completed === 0) {
+          task.completed = false;
+        } else {
+          task.completed = true;
+        }
+        return project;
+      });
+      res.json(newProjects);
       res.json(tasks);
     } else {
       res.status(404).json({ message: 'Could not find tasks for given project' })
